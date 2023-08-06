@@ -1,73 +1,73 @@
 #include <Servo.h>
-Servo nct;
+Servo servo;
 int x_axis;
 int y_axis;
-int joy_buton;
-int kayit_buton
-int sayac = 0;
+int record_button;
+int play_button;
+int counter = 0;
 int i = 0;
-int yeni = 0;
-
+int x = 0;
+int record[10]={};
 void setup() {
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
-  nct.attach(4);
+  servo.attach(4);
   pinMode(2, INPUT_PULLUP);
   pinMode(3, INPUT);
-  nct.write(0);
+  servo.write(0);
   Serial.begin(9600);
 }
 
 void loop() {
 
-  joy_buton = digitalRead(2);
-  kayit_buton = digitalRead(3);
+  record_button = digitalRead(2);
+  play_button = digitalRead(3);
   x_axis = analogRead(A0);
   y_axis = analogRead(A1);
 
   if (x_axis > 0 && x_axis < 250) {
-    sayac = sayac - 5;
-    nct.write(sayac);
+    counter = counter - 5;
+    servo.write(counter);
     delay(30);
   }
   if (x_axis > 750 && x_axis < 1023) {
-    sayac = sayac + 5;
-    nct.write(sayac);
+    counter = counter + 5;
+    servo.write(counter);
     delay(30);
   }
 
-  if (joy_buton == 0 && i < sizeof(kayit) / sizeof(kayit[0])) {
-    delay(200);
-    kayit[i] = sayac;
+  if (record_button == 0 && i < sizeof(record) / sizeof(record[0])) {
+    delay(150);
+    record[i] = counter;
     i++;
   }
 
-  if (kayit_buton == 1) {
-    nct.write(0);
+  if (play_button == 1) {
+    servo.write(0);
     delay(1000);
-    for (yeni = 0; yeni < i; yeni++) {
-      nct.write(kayit[yeni]);
-      Serial.print("yeni ");
-      Serial.println(kayit[yeni]);
+    for (x = 0; x < i; x++) {
+      servo.write(record[x]);
+      Serial.print("x ");
+      Serial.println(record[x]);
       delay(1000);
     }
 
     delay(50);
-    yeni = 0;
-    nct.write(0);
+    x = 0;
+    servo.write(0);
   }
 
-  if (sayac > 180) {
-    sayac = 180;
+  if (counter > 180) {
+    counter = 180;
   }
-  if (sayac < 0) {
-    sayac = 0;
+  if (counter < 0) {
+    counter = 0;
   }
 
-  Serial.print("sayac ");
-  Serial.println(sayac);
+  Serial.print("counter ");
+  Serial.println(counter);
   Serial.print("k ");
-  Serial.println(yeni);
+  Serial.println(x);
   Serial.print("i ");
   Serial.println(i);
 
