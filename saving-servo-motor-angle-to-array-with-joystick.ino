@@ -1,3 +1,6 @@
+//Ozan Odabaşı
+
+
 #include <Servo.h>
 Servo servo;
 int x_axis;
